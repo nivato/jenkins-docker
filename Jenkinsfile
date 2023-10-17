@@ -1,3 +1,6 @@
+def dockerRepo = 'nazarivato/jenkins-docker'
+def dockerImage = ''
+
 def containerIp(container) {
     sh(
         script: "docker inspect -f {{.NetworkSettings.IPAddress}} ${container.id}",
@@ -36,7 +39,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        docker.build "nazarivato/jenkins-docker:v${env.BUILD_NUMBER}.0"
+                        dockerImage = docker.build "${dockerRepo}:v1.0.${env.BUILD_NUMBER}"
                         sh 'docker images'
                     } catch (err) {
                         echo "${err.getMessage()}"
@@ -49,7 +52,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        docker.image("nazarivato/jenkins-docker:v${env.BUILD_NUMBER}.0").withRun('-p 9090:80') { cntr ->
+                        dockerImage.withRun('-p 9090:80') { cntr ->
                             sleep 5  // seconds
                             sh "curl -i http://${containerIp(cntr)}:80/"
                             sh "curl -i http://127.0.0.1:9090/"
@@ -59,6 +62,34 @@ pipeline {
                     } catch (err) {
                         echo "${err.getMessage()}"
                         error("'Docker Run' Stage Failed - ${err.getMessage()}")
+                    }
+                }
+            }
+        }
+        stage('Deploy Image'){
+            steps {
+                script {
+                    try {
+                        docker.withRegistry('', 'dockerhub_nazarivato') {
+                            dockerImage.push()
+                            dockerImage.push('latest')
+                        }
+                    } catch (err) {
+                        echo "${err.getMessage()}"
+                        error("'Deploy Image' Stage Failed - ${err.getMessage()}")
+                    }
+                }
+            }
+        }
+        stage('Cleanup'){
+            steps {
+                script {
+                    try {
+                        sh "docker rmi ${dockerRepo}:v1.0.${env.BUILD_NUMBER}"
+                        sh 'docker images'
+                    } catch (err) {
+                        echo "${err.getMessage()}"
+                        error("'Cleanup' Stage Failed - ${err.getMessage()}")
                     }
                 }
             }

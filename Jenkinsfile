@@ -91,6 +91,7 @@ pipeline {
                 script {
                     try {
                         sh "docker rmi ${dockerRepo}:${dockerTag}"
+                        sh "docker rmi ${dockerRepo}:latest"
                         sh 'docker images'
                     } catch (err) {
                         echo "${err.getMessage()}"

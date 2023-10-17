@@ -12,6 +12,7 @@ pipeline {
                         sh 'env'
                         sh 'pwd'
                         sh 'ls -lah'
+                        sh 'find . -type f'
                         sh 'docker --version'
                     } catch (err) {
                         echo "${err.getMessage()}"

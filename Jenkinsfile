@@ -12,7 +12,7 @@ pipeline {
                         sh 'env'
                         sh 'pwd'
                         sh 'ls -lah'
-                        sh 'find . -type f'
+                        sh 'find . -type f -not -path "*/.git/*"'
                         sh 'docker --version'
                     } catch (err) {
                         echo "${err.getMessage()}"

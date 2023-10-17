@@ -1,15 +1,11 @@
-FROM ubuntu:20.04
+FROM alpine:3.17
 
-ENV TZ=Europe/Kiev
+RUN apk update && \
+    apk add apache2 apache2-utils php81 php81-apache2 && \
+    rm -rf /var/www/localhost/htdocs/index.html
 
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
-    echo $TZ > /etc/timezone && \
-    apt update &&  \
-    apt install -y apache2 php libapache2-mod-php && \
-    rm -rf /var/www/html/index.html
-
-COPY src/index.php /var/www/html
+COPY src/index.php /var/www/localhost/htdocs/
 
 EXPOSE 80
 
-CMD ["apachectl", "-D", "FOREGROUND"]
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]

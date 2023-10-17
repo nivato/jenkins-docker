@@ -50,8 +50,9 @@ pipeline {
                 script {
                     try {
                         docker.image("nazarivato/jenkins-docker:v${env.BUILD_NUMBER}.0").withRun('-p 9090:80') { cntr ->
-                            sleep 10  // seconds
-                            sh "curl -i http://${containerIp(cntr)}:9090/"
+                            sleep 5  // seconds
+                            sh "curl -i http://${containerIp(cntr)}:80/"
+                            sh "curl -i http://127.0.0.1:9090/"
                             sh "docker logs ${cntr.id}"
                         }
                         sh 'docker ps -a'

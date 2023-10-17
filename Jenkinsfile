@@ -3,6 +3,9 @@ pipeline {
     options {
         disableConcurrentBuilds()
     }
+    triggers {
+        pollSCM 'H/5 * * * *'
+    }
     stages {
         stage('Debug Info'){
             steps {

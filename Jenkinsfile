@@ -1,4 +1,5 @@
 def dockerRepo = 'nazarivato/jenkins-docker'
+def dockerTag = ''
 def dockerImage = ''
 
 def containerIp(container) {
@@ -39,7 +40,11 @@ pipeline {
             steps {
                 script {
                     try {
-                        dockerImage = docker.build "${dockerRepo}:v1.0.${env.BUILD_NUMBER}"
+                        dockerTag = "v1.0.${env.BUILD_NUMBER}"
+                        dockerImage = docker.build(
+                            "${dockerRepo}:${dockerTag}",
+                            "--build-arg APP_VERSION=${dockerTag} ."
+                        )
                         sh 'docker images'
                     } catch (err) {
                         echo "${err.getMessage()}"
@@ -85,7 +90,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh "docker rmi ${dockerRepo}:v1.0.${env.BUILD_NUMBER}"
+                        sh "docker rmi ${dockerRepo}:${dockerTag}"
                         sh 'docker images'
                     } catch (err) {
                         echo "${err.getMessage()}"

@@ -14,8 +14,8 @@
         <h2 style="color: #304558;">🌎 Hello World!</h2>
         <h3>This is <code style="color: #304558;">Apache 2</code> on the <code style="color: #e95420;">Ubuntu 20.04</code> Docker image.</h2>
         <?php
-            \$server_ip = \$_SERVER['SERVER_ADDR'];
-            echo "<h3>Server IP Address is: <code> \$server_ip </code></h3>"
+            $server_ip = $_SERVER['SERVER_ADDR'];
+            echo "<h3>Server IP Address is: <code> $server_ip </code></h3>"
         ?>
         <h3 style="color: brown;">Application Version: <code>1.0</code></h3>
     </div>

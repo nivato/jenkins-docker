@@ -19,8 +19,8 @@
         <?php
             $server_ip = $_SERVER['SERVER_ADDR'];
             $app_ver = getenv('APP_VERSION');
-            echo "<h3>Server IP Address is: <code> $server_ip </code></h3>";
-            echo "<h3 style=\"color: limegreen;\">Application Version: <code> $app_ver </code></h3>";
+            echo "<h3>Server IP Address is: <code> $server_ip </code></h3>\n";
+            echo "<h3 style=\"color: limegreen;\">Application Version: <code> $app_ver </code></h3>\n";
         ?>
     </div>
 </body>

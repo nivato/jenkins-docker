@@ -1,6 +1,6 @@
 def containerIp(container) {
     sh(
-        script: "docker inspect -f {{.Node.Ip}} ${container.id}",
+        script: "docker inspect -f {{.NetworkSettings.IPAddress}} ${container.id}",
         returnStdout: true,
     ).trim()
 }

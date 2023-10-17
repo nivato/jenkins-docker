@@ -18,8 +18,9 @@
         <h3>This is <code style="color: #304558;">Apache 2</code> on the <code style="color: #e95420;">Alpine Linux 3.17</code> Docker image.</h2>
         <?php
             $server_ip = $_SERVER['SERVER_ADDR'];
-            echo "<h3>Server IP Address is: <code> $server_ip </code></h3>"
-            echo "<h3 style=\"color: limegreen;\">Application Version: <code> $_ENV['APP_VERSION'] </code></h3>"
+            $app_ver = getenv('APP_VERSION');
+            echo "<h3>Server IP Address is: <code> $server_ip </code></h3>";
+            echo "<h3 style=\"color: limegreen;\">Application Version: <code> $app_ver </code></h3>";
         ?>
     </div>
 </body>

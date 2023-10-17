@@ -2,7 +2,7 @@
 A home task repo containing Jenkins-to-Docker integration project.
 
 ### Docker Hub: **[nazarivato/jenkins-docker](https://hub.docker.com/repository/docker/nazarivato/jenkins-docker/general)**
-![Docker Hub](https://opennebula.io/wp-content/uploads/2020/05/DockerHub.png "Docker Hub")
+[![Docker Hub](https://opennebula.io/wp-content/uploads/2020/05/DockerHub.png "Docker Hub")](https://hub.docker.com/repository/docker/nazarivato/jenkins-docker/general)
 
 ### Build image
 ```shell

@@ -65,6 +65,7 @@ pipeline {
                                 script: "curl -i http://${ipAddress}:80/",
                                 returnStdout: true,
                             ).trim()
+                            echo "internalPortResponse: ${internalPortResponse}"
                             if (!(internalPortResponse && internalPortResponse.contains(ipAddress) && internalPortResponse.contains(dockerTag))){
                                 sh "docker exec -it ${cntr.id} /bin/sh -c 'cat ${errorLog}'"
                                 error("Invalid response when calling 'http://${ipAddress}:80/' URL")
@@ -73,6 +74,7 @@ pipeline {
                                 script: "curl -i http://127.0.0.1:9090/",
                                 returnStdout: true,
                             ).trim()
+                            echo "mappedPortResponse: ${mappedPortResponse}"
                             if (!(mappedPortResponse && mappedPortResponse.contains(ipAddress) && mappedPortResponse.contains(dockerTag))){
                                 sh "docker exec -it ${cntr.id} /bin/sh -c 'cat ${errorLog}'"
                                 error("Invalid response when calling 'http://127.0.0.1:9090/' URL")

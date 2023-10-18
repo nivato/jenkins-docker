@@ -107,6 +107,11 @@ pipeline {
             }
         }
         stage('Cleanup'){
+            when {
+                expression {
+                    true  // always
+                }
+            }
             steps {
                 script {
                     try {

@@ -57,7 +57,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        dockerImage.withRun('-p 9090:80') { cntr ->
+                        dockerImage.withRun('-p 8081:80') { cntr ->
                             sleep 5  // seconds
                             def ipAddress = containerIp(cntr)
                             def errorLog = "/var/log/apache2/error.log"
@@ -72,14 +72,14 @@ pipeline {
                                 error("Invalid response when calling 'http://${ipAddress}:80/' URL")
                             }
                             def mappedPortResponse = sh(
-                                script: "curl -i http://127.0.0.1:9090/",
+                                script: "curl -i http://127.0.0.1:8081/",
                                 returnStdout: true,
                             ).trim()
                             echo "mappedPortResponse: ${mappedPortResponse}"
                             if (!(mappedPortResponse && mappedPortResponse.contains(ipAddress) && mappedPortResponse.contains(dockerTag))){
                                 sh "docker exec ${cntr.id} /bin/sh -c 'cat ${errorLog}'"
                                 sh "docker logs ${cntr.id}"
-                                error("Invalid response when calling 'http://127.0.0.1:9090/' URL")
+                                error("Invalid response when calling 'http://127.0.0.1:8081/' URL")
                             }
                             sh "docker logs ${cntr.id}"
                         }

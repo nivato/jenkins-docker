@@ -53,20 +53,36 @@ pipeline {
                 }
             }
         }
-        stage('Docker Run'){
+        stage('Test Image'){
             steps {
                 script {
                     try {
                         dockerImage.withRun('-p 9090:80') { cntr ->
                             sleep 5  // seconds
-                            sh "curl -i http://${containerIp(cntr)}:80/"
-                            sh "curl -i http://127.0.0.1:9090/"
+                            def ipAddress = containerIp(cntr)
+                            def errorLog = "/var/log/apache2/error.log"
+                            def internalPortResponse = sh(
+                                script: "curl -i http://${ipAddress}:80/",
+                                returnStdout: true,
+                            ).trim()
+                            if (!(internalPortResponse && internalPortResponse.contains(ipAddress) && internalPortResponse.contains(dockerTag))){
+                                sh "docker exec -it ${cntr.id} /bin/sh -c 'cat ${errorLog}'"
+                                error("Invalid response when calling 'http://${ipAddress}:80/' URL")
+                            }
+                            def mappedPortResponse = sh(
+                                script: "curl -i http://127.0.0.1:9090/",
+                                returnStdout: true,
+                            ).trim()
+                            if (!(mappedPortResponse && mappedPortResponse.contains(ipAddress) && mappedPortResponse.contains(dockerTag))){
+                                sh "docker exec -it ${cntr.id} /bin/sh -c 'cat ${errorLog}'"
+                                error("Invalid response when calling 'http://127.0.0.1:9090/' URL")
+                            }
                             sh "docker logs ${cntr.id}"
                         }
                         sh 'docker ps -a'
                     } catch (err) {
                         echo "${err.getMessage()}"
-                        error("'Docker Run' Stage Failed - ${err.getMessage()}")
+                        error("'Test Image' Stage Failed - ${err.getMessage()}")
                     }
                 }
             }

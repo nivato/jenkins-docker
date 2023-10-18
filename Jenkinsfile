@@ -67,7 +67,8 @@ pipeline {
                             ).trim()
                             echo "internalPortResponse: ${internalPortResponse}"
                             if (!(internalPortResponse && internalPortResponse.contains(ipAddress) && internalPortResponse.contains(dockerTag))){
-                                sh "docker exec -it ${cntr.id} /bin/sh -c 'cat ${errorLog}'"
+                                sh "docker exec ${cntr.id} /bin/sh -c 'cat ${errorLog}'"
+                                sh "docker logs ${cntr.id}"
                                 error("Invalid response when calling 'http://${ipAddress}:80/' URL")
                             }
                             def mappedPortResponse = sh(
@@ -76,7 +77,8 @@ pipeline {
                             ).trim()
                             echo "mappedPortResponse: ${mappedPortResponse}"
                             if (!(mappedPortResponse && mappedPortResponse.contains(ipAddress) && mappedPortResponse.contains(dockerTag))){
-                                sh "docker exec -it ${cntr.id} /bin/sh -c 'cat ${errorLog}'"
+                                sh "docker exec ${cntr.id} /bin/sh -c 'cat ${errorLog}'"
+                                sh "docker logs ${cntr.id}"
                                 error("Invalid response when calling 'http://127.0.0.1:9090/' URL")
                             }
                             sh "docker logs ${cntr.id}"

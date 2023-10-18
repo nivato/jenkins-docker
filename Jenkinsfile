@@ -106,22 +106,17 @@ pipeline {
                 }
             }
         }
-        stage('Cleanup'){
-            when {
-                expression {
-                    true  // always
-                }
-            }
-            steps {
-                script {
-                    try {
-                        sh "docker rmi ${dockerRepo}:${dockerTag}"
-                        sh "docker rmi ${dockerRepo}:latest"
-                        sh 'docker images'
-                    } catch (err) {
-                        echo "${err.getMessage()}"
-                        error("'Cleanup' Stage Failed - ${err.getMessage()}")
-                    }
+    }
+    post {
+        always {
+            script {
+                try {
+                    sh "docker rmi ${dockerRepo}:${dockerTag}"
+                    sh "docker rmi ${dockerRepo}:latest"
+                    sh 'docker images'
+                } catch (err) {
+                    echo "${err.getMessage()}"
+                    error("'Cleanup' Stage Failed - ${err.getMessage()}")
                 }
             }
         }
